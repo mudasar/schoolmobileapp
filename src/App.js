@@ -7,7 +7,8 @@
  */
 
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -17,25 +18,52 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {Home} from './Screens/Home';
 import { AuthStackNavigator } from './Navigators/AuthStackNavigator';
-import { LightTheme } from './Themes/Ligh';
+import { LightTheme } from './Themes/Light';
+import { AuthContext, AuthProvider } from './Contexts/AuthContext';
+import { ActivityIndicator, View } from 'react-native';
+import { AppTabNavigator } from './Navigators/AppTabNavigator';
 
 const RootStack = createStackNavigator();
 
 
 const App: () => React$Node = () => {
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    AsyncStorage.getItem('user').then((user) => {
+      console.log(user);
+      setLoading(false);
+
+    }).catch(error => console.log);
+    return () => {
+      
+    }
+  }, []);
+
+  const {user, login} = useContext(AuthContext)
+console.log(user)
+  if (loading) {
+    return (<View><ActivityIndicator size="large" /></View>)
+  }
+
   return (
     <>
     <SafeAreaProvider>
         <ThemeProvider>
-
+          <AuthProvider>
           <NavigationContainer theme={LightTheme}>
             <RootStack.Navigator screenOptions={{ 
                 headerShown: false
               }}>
-              <RootStack.Screen component={AuthStackNavigator} name={'AuthStack'} />
+
+              { !user && <RootStack.Screen component={AuthStackNavigator} name={'AuthStack'} />}
+              <RootStack.Screen component={AppTabNavigator} name={'Home'} />
+
             </RootStack.Navigator>
             
             </NavigationContainer>
+          </AuthProvider>
       </ThemeProvider>
       </SafeAreaProvider>
     </>

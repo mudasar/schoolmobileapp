@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {Button, } from 'react-native-elements'; 
 import Error from '../Components/Error';
 import FillButton from '../Components/FillButton';
 import Heading from '../Components/Heading';
 import Input from '../Components/Input';
+import { AuthContext } from '../Contexts/AuthContext';
 
 const styles = StyleSheet.create({
     container: {
@@ -25,6 +26,9 @@ const styles = StyleSheet.create({
 });
  
 export const Login = ({navigation}) => {
+
+    const {login} = useContext(AuthContext);
+
     return (
         <View style={styles.container}>
             <Heading style={styles.title}>Login</Heading>
@@ -33,6 +37,8 @@ export const Login = ({navigation}) => {
             <Input style={ styles.input} placeholder="Password" secureTextEntry  />
             <FillButton title="LOGIN" raised onPress={() => {
                 console.log('Login button clicked');
+                login();
+                navigation.navigate('Home');
             }} />
             
             <FillButton title="Register" type="clear" style={ styles.registerButton} onPress={() => {

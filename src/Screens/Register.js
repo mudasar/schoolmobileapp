@@ -44,6 +44,8 @@ export const Register = ({navigation}) => {
             </View>
             
             <Error error="Register Failed" />
+            <Input style={ styles.input} placeholder="First Name" />
+            <Input style={ styles.input} placeholder="Last Name"  />
             <Input style={ styles.input} placeholder="Email" keyboardType="email-address" />
             <Input style={ styles.input} placeholder="Password" secureTextEntry  />
             <FillButton title="REGISTER" raised onPress={() => {
